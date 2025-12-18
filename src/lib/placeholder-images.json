@@ -1,0 +1,46 @@
+{
+  "placeholderImages": [
+    {
+      "id": "avatar-1",
+      "description": "Professional headshot of a woman with curly hair.",
+      "imageUrl": "https://images.unsplash.com/photo-1589729132389-8f0e0b55b91e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx3b21hbiUyMGhlYWRzaG90fGVufDB8fHx8MTc2NTk0NDIzM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman headshot"
+    },
+    {
+      "id": "avatar-2",
+      "description": "Professional headshot of a man with glasses.",
+      "imageUrl": "https://images.unsplash.com/photo-1616442690473-2ec0c452715c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxtYW4lMjBnbGFzc2VzfGVufDB8fHx8MTc2NTkxNjQwMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man glasses"
+    },
+    {
+      "id": "avatar-3",
+      "description": "Professional headshot of a person with short hair.",
+      "imageUrl": "https://images.unsplash.com/photo-1531123414780-f74242c2b052?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cGVyc29uJTIwcG9ydHJhaXR8ZW58MHx8fHwxNzY1ODY1MTIxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "avatar-4",
+      "description": "Candid headshot of a smiling woman.",
+      "imageUrl": "https://images.unsplash.com/photo-1662850886700-4ec19bd30d11?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzbWlsaW5nJTIwd29tYW58ZW58MHx8fHwxNzY1OTM5OTYxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "smiling woman"
+    },
+    {
+      "id": "avatar-5",
+      "description": "Headshot of a man in a suit.",
+      "imageUrl": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxtYW4lMjBzdWl0fGVufDB8fHx8MTc2NTg0NzI1NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man suit"
+    },
+    {
+      "id": "avatar-6",
+      "description": "Professional headshot of a woman with long hair.",
+      "imageUrl": "https://images.unsplash.com/photo-1557053910-d9eadeed1c58?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx3b21hbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc2NTkwMjk0OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman portrait"
+    },
+    {
+      "id": "avatar-7",
+      "description": "Headshot of a smiling man.",
+      "imageUrl": "https://images.unsplash.com/photo-1633367583895-08545d733dfe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzbWlsaW5nJTIwbWFufGVufDB8fHx8MTc2NTk0NDIzM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "smiling man"
+    }
+  ]
+}

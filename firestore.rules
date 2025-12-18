@@ -1,0 +1,168 @@
+/**
+ * Core Philosophy:
+ * This ruleset enforces a Role-Based Access Control (RBAC) model combined with
+ * user ownership. The default security posture is highly restrictive. Most data
+ * collections, such as candidate profiles and job roles, are accessible only by
+ * users with an 'Admin' role. This ensures that sensitive hiring data is protected
+ * by default. A user's own profile document is an exception, where a strict
+ * user-ownership model is applied.
+ *
+ * Data Structure:
+ * The data is organized into a series of flat, top-level collections (e.g.,
+ * /candidateProfiles, /jobs, /users). This structure avoids complex nested
+ * security rules and improves query performance. Relationships between entities,
+ * such as a candidate and their interviews, are managed via ID fields within
+ * documents rather than through subcollections.
+ *
+ * Key Security Decisions:
+ * 1. Admin-Only Writes by Default: Due to the sensitive nature of hiring data,
+ *    write operations on most collections are restricted to 'Admin' users.
+ * 2. Authenticated Reads: All authenticated users can read from collections like
+ *    /jobs, allowing the application to function for non-admin users.
+ * 3. User Profile Ownership: The /users/{userId} collection is strictly locked
+ *    down. Users can only create, read, update, and delete their own document.
+ * 4. User Enumeration Disabled: Listing the /users collection is explicitly
+ *    disallowed to prevent malicious actors from discovering the list of all
+ *    system users.
+ *
+ * Denormalization for Authorization:
+ * Authorization checks rely on the `role` field denormalized onto each user's
+ * document in the `/users/{userId}` collection. This requires a `get()` call
+ * in helper functions (e.g., `isAdmin()`) to look up the user's role, which is
+ * an efficient way to manage global permissions.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // -------------------------------------------------------------------------
+    // Helper Functions
+    // -------------------------------------------------------------------------
+
+    /**
+     * Checks if a user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Checks if the currently authenticated user's UID matches the provided userId.
+     * This is the foundation for the "Ownership" security pattern.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * Retrieves the role of the currently authenticated user from their user document.
+     * Note: This function results in one document read per checked request.
+     */
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    /**
+     * Checks if the authenticated user has the 'Admin' role.
+     */
+    function isAdmin() {
+      return isSignedIn() && getUserData().role == 'Admin';
+    }
+
+    /**
+     * Checks if the authenticated user is the designated interviewer for a document.
+     */
+    function isInterviewer(interviewerId) {
+      return isSignedIn() && request.auth.uid == interviewerId;
+    }
+
+    // -------------------------------------------------------------------------
+    // Collection Rules
+    // -------------------------------------------------------------------------
+
+    /**
+     * @description Grants full read/write access to administrator users only.
+     * @path        /candidateProfiles/{candidateProfileId}
+     */
+    match /candidateProfiles/{candidateProfileId} {
+      allow read, write: if isAdmin();
+    }
+
+    /**
+     * @description Grants read access to all signed-in users, and write access as well.
+     * @path        /jobs/{jobId}
+     */
+    match /jobs/{jobId} {
+      allow read, write: if isSignedIn();
+    }
+
+    /**
+     * @description Grants full read/write access to administrator users only.
+     * @path        /skills/{skillId}
+     */
+    match /skills/{skillId} {
+       allow read, write: if isAdmin();
+    }
+
+    /**
+     * @description Grants full read/write access to administrator users only.
+     * @path        /assessments/{assessmentId}
+     */
+    match /assessments/{assessmentId} {
+       allow read, write: if isAdmin();
+    }
+
+    /**
+     * @description Allows Admins full access, while Interviewers can manage their own assigned interviews.
+     * @path        /interviews/{interviewId}
+     */
+    match /interviews/{interviewId} {
+      allow get: if isAdmin() || isInterviewer(resource.data.interviewerId);
+      allow list: if isAdmin();
+      allow create: if isAdmin() || isInterviewer(request.resource.data.interviewerId);
+      allow update: if (isAdmin() || isInterviewer(resource.data.interviewerId)) && resource != null;
+      allow delete: if (isAdmin() || isInterviewer(resource.data.interviewerId)) && resource != null;
+    }
+
+    /**
+     * @description A user can read and write their own user document, and manage their own candidates.
+     * @path        /users/{userId}
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isOwner(userId) && resource != null && request.resource.data.id == resource.data.id;
+      allow delete: if isOwner(userId) && resource != null;
+
+      match /candidates/{candidateId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    /**
+     * @description Grants full read/write access to administrator users only.
+     * @path        /projects/{projectId}
+     */
+    match /projects/{projectId} {
+       allow read, write: if isAdmin();
+    }
+
+    /**
+     * @description Grants full read/write access to administrator users only.
+     * @path        /attritionPredictions/{attritionPredictionId}
+     */
+    match /attritionPredictions/{attritionPredictionId} {
+       allow read, write: if isAdmin();
+    }
+
+    /**
+* @description Grants full read/write access to administrator users only.
+     * @path        /learningRecommendations/{recommendationId}
+     */
+    match /learningRecommendations/{recommendationId} {
+       allow read, write: if isAdmin();
+    }
+
+  }
+}

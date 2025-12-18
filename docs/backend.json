@@ -1,0 +1,507 @@
+{
+  "entities": {
+    "CandidateProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "CandidateProfile",
+      "type": "object",
+      "description": "Represents a candidate's profile, including personal information, skills, experience, and assessment results.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the candidate profile."
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The candidate's first name."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The candidate's last name."
+        },
+        "email": {
+          "type": "string",
+          "description": "The candidate's email address.",
+          "format": "email"
+        },
+        "resumeText": {
+          "type": "string",
+          "description": "The full text of the candidate's resume."
+        },
+        "extractedSkills": {
+          "type": "array",
+          "description": "A list of skills extracted from the candidate's resume.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "experienceYears": {
+          "type": "number",
+          "description": "Total years of experience of the candidate."
+        },
+        "projectIds": {
+          "type": "array",
+          "description": "References to Projects the candidate has worked on. (Relationship: CandidateProfile 1:N Project)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "assessmentIds": {
+          "type": "array",
+          "description": "References to Assessments taken by the candidate. (Relationship: CandidateProfile 1:N Assessment)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "overallScore": {
+          "type": "number",
+          "description": "The candidate's overall score based on skill fit and experience."
+        },
+        "duplicateDetected": {
+          "type": "boolean",
+          "description": "Indicates if a duplicate resume has been detected."
+        }
+      },
+      "required": [
+        "id",
+        "firstName",
+        "lastName",
+        "email",
+        "resumeText"
+      ]
+    },
+    "JobRole": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "JobRole",
+      "type": "object",
+      "description": "Represents a job role, including requirements, responsibilities, and required skills.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the job role."
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the job role."
+        },
+        "description": {
+          "type": "string",
+          "description": "A description of the job role and its responsibilities."
+        },
+        "requiredSkills": {
+          "type": "array",
+          "description": "A list of skills required for the job role.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "department": {
+          "type": "string",
+          "description": "The department this job role belongs to."
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "description",
+        "requiredSkills"
+      ]
+    },
+    "Skill": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Skill",
+      "type": "object",
+      "description": "Represents a specific skill, including name and category.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the skill."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the skill."
+        },
+        "category": {
+          "type": "string",
+          "description": "The category the skill belongs to (e.g., Programming, Design)."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "category"
+      ]
+    },
+    "Assessment": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Assessment",
+      "type": "object",
+      "description": "Represents an assessment taken by a candidate, including questions, answers, and score.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the assessment."
+        },
+        "candidateProfileId": {
+          "type": "string",
+          "description": "Reference to the CandidateProfile who took the assessment. (Relationship: CandidateProfile 1:N Assessment)"
+        },
+        "question": {
+          "type": "string",
+          "description": "The question asked in the assessment."
+        },
+        "answer": {
+          "type": "string",
+          "description": "The candidate's answer to the question."
+        },
+        "score": {
+          "type": "number",
+          "description": "The score received by the candidate for the assessment."
+        },
+        "assessmentType": {
+          "type": "string",
+          "description": "The type of assessment (e.g., MCQ, coding, case-based)."
+        }
+      },
+      "required": [
+        "id",
+        "candidateProfileId",
+        "question",
+        "answer",
+        "score"
+      ]
+    },
+    "Interview": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Interview",
+      "type": "object",
+      "description": "Represents an interview conducted with a candidate, including feedback and outcome.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the interview."
+        },
+        "candidateProfileId": {
+          "type": "string",
+          "description": "Reference to the CandidateProfile who was interviewed. (Relationship: CandidateProfile 1:N Interview)"
+        },
+        "interviewerId": {
+          "type": "string",
+          "description": "Reference to the User who conducted the interview."
+        },
+        "feedbackSummary": {
+          "type": "string",
+          "description": "A summary of the feedback provided after the interview."
+        },
+        "outcome": {
+          "type": "string",
+          "description": "The outcome of the interview (e.g., Hire, Hold, Reject)."
+        },
+        "dateTime": {
+          "type": "string",
+          "description": "The date and time of the interview.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "candidateProfileId",
+        "interviewerId",
+        "feedbackSummary",
+        "outcome"
+      ]
+    },
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the system, including roles and permissions.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user."
+        },
+        "userName": {
+          "type": "string",
+          "description": "The user's user name."
+        },
+        "email": {
+          "type": "string",
+          "description": "The user's email address.",
+          "format": "email"
+        },
+        "role": {
+          "type": "string",
+          "description": "The user's role (e.g., Recruiter, Manager, Admin)."
+        },
+        "permissions": {
+          "type": "array",
+          "description": "A list of permissions granted to the user.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "userName",
+        "email",
+        "role"
+      ]
+    },
+    "Project": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Project",
+      "type": "object",
+      "description": "Represents a project a candidate has worked on.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the project."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the project."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of the project."
+        },
+        "skillsUsed": {
+          "type": "array",
+          "description": "A list of skills used in the project.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description"
+      ]
+    },
+    "AttritionPrediction": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AttritionPrediction",
+      "type": "object",
+      "description": "Represents the predicted attrition risk for a new hire.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the attrition prediction."
+        },
+        "candidateProfileId": {
+          "type": "string",
+          "description": "Reference to the CandidateProfile for whom attrition is predicted. (Relationship: CandidateProfile 1:N AttritionPrediction)"
+        },
+        "riskScore": {
+          "type": "number",
+          "description": "The calculated risk score for attrition."
+        },
+        "factors": {
+          "type": "array",
+          "description": "Factors contributing to the attrition risk (e.g., engagement, learning pace, feedback).",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "candidateProfileId",
+        "riskScore"
+      ]
+    },
+    "PersonalizedLearningRecommendation": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "PersonalizedLearningRecommendation",
+      "type": "object",
+      "description": "Represents a personalized learning recommendation for a new hire.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the learning recommendation."
+        },
+        "candidateProfileId": {
+          "type": "string",
+          "description": "Reference to the CandidateProfile for whom the recommendation is made. (Relationship: CandidateProfile 1:N PersonalizedLearningRecommendation)"
+        },
+        "skillGap": {
+          "type": "string",
+          "description": "The skill gap identified for the candidate."
+        },
+        "recommendedResource": {
+          "type": "string",
+          "description": "A resource to address the skill gap."
+        },
+        "resourceLink": {
+          "type": "string",
+          "description": "A url to the recommended resource.",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "id",
+        "candidateProfileId",
+        "skillGap",
+        "recommendedResource"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/candidateProfiles/{candidateProfileId}",
+        "definition": {
+          "entityName": "CandidateProfile",
+          "schema": {
+            "$ref": "#/backend/entities/CandidateProfile"
+          },
+          "description": "Stores candidate profiles, including personal information, skills, and experience. Contains references to projects and assessments.  No denormalized authorization data included as this is the parent entity.",
+          "params": [
+            {
+              "name": "candidateProfileId",
+              "description": "Unique identifier for the candidate profile."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/jobRoles/{jobRoleId}",
+        "definition": {
+          "entityName": "JobRole",
+          "schema": {
+            "$ref": "#/backend/entities/JobRole"
+          },
+          "description": "Stores job role information, including requirements, responsibilities, and required skills.",
+          "params": [
+            {
+              "name": "jobRoleId",
+              "description": "Unique identifier for the job role."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/skills/{skillId}",
+        "definition": {
+          "entityName": "Skill",
+          "schema": {
+            "$ref": "#/backend/entities/Skill"
+          },
+          "description": "Stores skill information, including name and category.",
+          "params": [
+            {
+              "name": "skillId",
+              "description": "Unique identifier for the skill."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/assessments/{assessmentId}",
+        "definition": {
+          "entityName": "Assessment",
+          "schema": {
+            "$ref": "#/backend/entities/Assessment"
+          },
+          "description": "Stores assessment data. Includes denormalized 'candidateProfileId' for authorization independence.",
+          "params": [
+            {
+              "name": "assessmentId",
+              "description": "Unique identifier for the assessment."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/interviews/{interviewId}",
+        "definition": {
+          "entityName": "Interview",
+          "schema": {
+            "$ref": "#/backend/entities/Interview"
+          },
+          "description": "Stores interview data. Includes denormalized 'candidateProfileId' for authorization independence.",
+          "params": [
+            {
+              "name": "interviewId",
+              "description": "Unique identifier for the interview."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user data, including roles and permissions.  Authorization uses request.auth.uid == userId.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "Unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/projects/{projectId}",
+        "definition": {
+          "entityName": "Project",
+          "schema": {
+            "$ref": "#/backend/entities/Project"
+          },
+          "description": "Stores project data for projects candidates have worked on.",
+          "params": [
+            {
+              "name": "projectId",
+              "description": "Unique identifier for the project."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/attritionPredictions/{attritionPredictionId}",
+        "definition": {
+          "entityName": "AttritionPrediction",
+          "schema": {
+            "$ref": "#/backend/entities/AttritionPrediction"
+          },
+          "description": "Stores attrition prediction data. Includes denormalized 'candidateProfileId' for authorization independence.",
+          "params": [
+            {
+              "name": "attritionPredictionId",
+              "description": "Unique identifier for the attrition prediction."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/learningRecommendations/{recommendationId}",
+        "definition": {
+          "entityName": "PersonalizedLearningRecommendation",
+          "schema": {
+            "$ref": "#/backend/entities/PersonalizedLearningRecommendation"
+          },
+          "description": "Stores personalized learning recommendation data. Includes denormalized 'candidateProfileId' for authorization independence.",
+          "params": [
+            {
+              "name": "recommendationId",
+              "description": "Unique identifier for the learning recommendation."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to support the hiring system, HireGenius, with a focus on authorization independence, clear security rules, and scalability. The structure segregates data based on access requirements and uses denormalization to avoid hierarchical authorization dependencies.\n\n1.  **Candidate Profiles:** Candidate profiles are stored under `/candidateProfiles/{candidateProfileId}`. This top-level collection ensures profiles are easily accessible.  References to related data (Projects, Assessments, Interviews, AttritionPredictions, PersonalizedLearningRecommendations) are managed via array fields within the `CandidateProfile` documents (e.g., `projectIds`, `assessmentIds`). This approach avoids subcollections and maintains authorization independence, since access to a candidate profile does not inherently grant access to its related projects or assessments, and vice versa.\n\n2.  **Job Roles:** Job roles are stored in `/jobRoles/{jobRoleId}`. This collection is separate and allows for easy management of job requirements and skills.\n\n3.  **Skills:** Skills are stored in the `/skills/{skillId}` collection, providing a central repository for skill taxonomy.\n\n4.  **Assessments, Interviews, Attrition Predictions, and Personalized Learning Recommendations:** These entities are stored in top-level collections (`/assessments/{assessmentId}`, `/interviews/{interviewId}`, `/attritionPredictions/{attritionPredictionId}`, `/learningRecommendations/{recommendationId}`). Each document includes the `candidateProfileId` to establish the relationship with the candidate. This denormalization ensures that retrieving an assessment, interview, attrition prediction, or learning recommendation does not require accessing the parent `CandidateProfile` document for authorization. The same authorization rules can be applied consistently across all documents within each of these collections.\n\n5.  **Users:** User data, including roles (Recruiter, Manager, Admin), is stored in `/users/{userId}`.  Authorization rules will rely on `request.auth.uid` matching the `userId` to control access to user-specific data.\n\n6. **Projects:** Project data is stored in `/projects/{projectId}`. This collection stores the project data a candidate has worked on.\n\n**Authorization Independence (Denormalization):**\n*   The `candidateProfileId` is duplicated in the `Assessment`, `Interview`, `AttritionPrediction`, and `PersonalizedLearningRecommendation` collections. This duplication allows direct querying and access control based on the candidate without needing to traverse up to the `CandidateProfiles` collection.\n\n**QAPs (Rules are not Filters):**\n*   Segregation of data into separate collections (`candidateProfiles`, `jobRoles`, `skills`, `assessments`, `interviews`, `attritionPredictions`, `learningRecommendations`, `users`, `projects`) ensures that list operations are secure. Rules can be written to allow listing only those documents that the requesting user is authorized to access based on the entity's properties or the user's role.\n\n**Global Roles (DBAC):**\n*   The `/users/{userId}` collection stores user roles. Firestore security rules can check the role of the requesting user to grant or deny access to specific resources. Additionally, existence checks on documents in collections like `/roles_admin/{userId}` can be used for elevated privileges (though this is not explicitly defined in the schema provided)."
+  }
+}
+    
